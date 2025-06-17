@@ -1,12 +1,23 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Spawner Settings")]
-    public GameObject enemyPrefab;
+    public List<GameObject> slimeVariants;   // Wave 1–9 slimes
+    public GameObject bossPrefab;            // Wave 10 boss
     public Transform spawnPoint;
     public float respawnDelay = 2f;
+
+    [Header("Health Scaling")]
+    public int baseEnemyHealth = 10;
+    public int healthIncreasePerWave = 5;
+    public float bossHealthMultiplier = 2.0f;
+
+    [Header("Boss Settings")]
+    public Vector3 bossSpawnOffset = new Vector3(0, 0, -1.5f);
+    public float bossScaleMultiplier = 1.75f;
 
     private GameObject currentEnemy;
 
@@ -17,18 +28,35 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnEnemy()
     {
-        if (enemyPrefab == null || spawnPoint == null)
+        int wave = WaveManager.Instance.currentWave;
+
+        GameObject prefabToSpawn = (wave == 10)
+            ? bossPrefab
+            : slimeVariants[Random.Range(0, slimeVariants.Count)];
+
+        // Calculate spawn position
+        Vector3 spawnPosition = spawnPoint.position;
+        if (wave == 10)
         {
-            Debug.LogError("EnemySpawner: Missing prefab or spawn point!");
-            return;
+            spawnPosition += bossSpawnOffset;
         }
 
-        currentEnemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
-        Debug.Log("Spawned enemy: " + currentEnemy.name);
+        // Spawn enemy
+        currentEnemy = Instantiate(prefabToSpawn, spawnPosition, spawnPoint.rotation);
+        Debug.Log($"Wave {wave}: Spawned {currentEnemy.name}");
 
+        // Assign health
         EnemyHealth health = currentEnemy.GetComponent<EnemyHealth>();
         if (health != null)
         {
+            int calculatedHealth = baseEnemyHealth + ((wave - 1) * healthIncreasePerWave);
+            if (wave == 10)
+            {
+                calculatedHealth = Mathf.RoundToInt(calculatedHealth * bossHealthMultiplier);
+                currentEnemy.transform.localScale *= bossScaleMultiplier;
+            }
+
+            health.maxHealth = calculatedHealth;
             health.SetSpawner(this);
         }
         else
@@ -39,7 +67,6 @@ public class EnemySpawner : MonoBehaviour
 
     public void NotifyEnemyDied()
     {
-        // Immediately destroy the current enemy (optional here; already done in EnemyHealth)
         if (currentEnemy != null)
         {
             Destroy(currentEnemy);
@@ -52,6 +79,7 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator RespawnAfterDelay()
     {
         yield return new WaitForSeconds(respawnDelay);
+        WaveManager.Instance.AdvanceWave();
         SpawnEnemy();
     }
 }

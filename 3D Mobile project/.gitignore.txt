@@ -1,0 +1,36 @@
+# Unity Generated
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+MemoryCaptures/
+UserSettings/
+.crash/
+*.stacktrace
+
+# OS / IDE
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.pidb
+*.pdb
+*.mdb
+
+# JetBrains
+*.iml
+
+# Rider / VS Cache
+.vs/
+*.DotSettings
+
+# TextMesh Pro Package Cache
+Assets/TextMesh Pro/Documentation/
+Assets/TextMesh Pro/Examples & Extras/
+
+# Ignore all meta files except inside Assets
+!Assets/**/*.meta

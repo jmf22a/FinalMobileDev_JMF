@@ -364,7 +364,10 @@
 "Assets/Scripts/AxeScripts/AxeHit.cs"
 "Assets/Scripts/EnemyScripts/EnemyHealth.cs"
 "Assets/Scripts/EnemyScripts/EnemySpawner.cs"
+"Assets/Scripts/HealthBar.cs"
 "Assets/Scripts/PlayerScripts/PlayerAttack.cs"
+"Assets/Scripts/PlayerScripts/PlayerStats.cs"
+"Assets/Scripts/WaveManager.cs"
 -langversion:9.0
 /deterministic
 /optimize+

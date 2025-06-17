@@ -1,0 +1,14 @@
+* text=auto
+*.cs text
+*.shader text
+*.txt text
+*.meta text
+*.unity text
+*.prefab text
+*.mat text
+*.cginc text
+*.png binary
+*.jpg binary
+*.ttf binary
+*.fbx binary
+*.pdf binary
